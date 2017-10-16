@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+
+
+def get_current_dir() -> str:
+    import os
+    return os.path.dirname(os.path.realpath(__file__))
+
+
+def get_supported_systems() -> [str]:
+    """Return a list of systems where support is availabl
+    Scan the available env. files and filter the names with the pattern env.SYSTEMNAME.(compiler).(whatever).postfix
+    """
+    import os
+    import re
+    pattern = re.compile(r'\Aenv\.(?P<name>[\w\-._]+)\.((cray|gcc|pgi|clang)\.((\w-_)+\.)*)\w+$')
+    ls = os.listdir(get_current_dir())
+    filtered = set()
+    for f in ls:
+        m = pattern.match(f)
+        if m:
+            filtered.add(m.group('name'))
+    return list(filtered)
+
+
+def match_system(hostname: str) -> str:
+    """"Match a hostname with the supported system.
+    Fit the longest prefix with the supported system.
+
+    A host with the name keschln-0001 should fit to keschln-0001 if available, otherwise it should fit to kesch.
+    """
+    import platform
+    hostname = platform.node()
+    systems = get_supported_systems()
+    bestfit = ''
+    for s in systems:
+        if hostname.startswith(s):
+            if len(s) > len(bestfit):
+                bestfit = s
+    return bestfit
+
+
+def find_environment(system: str, environment: str) -> str:
+    import os
+    files = os.listdir(get_current_dir())
+
+    prefix = "env.{system}.{environment}".format(system=system, environment=environment)
+    filtered = [x for x in files if x.startswith(prefix)]
+    if len(filtered) == 0:
+        raise ValueError('Environment with the prefix {} not found!'.format(prefix))
+    sorted(filtered)
+    file = "{cd}/{file}".format(cd=get_current_dir(), file=filtered[0])
+    return file
+
+
+if __name__ == "__main__":
+    import platform
+    import argparse
+    system = match_system(platform.node())
+
+    parser = argparse.ArgumentParser(description="Get system environment")
+    parser.add_argument("-l", "--list", action="store_true",
+                        help="List supported systems.")
+    parser.add_argument("-e", "--environment", type=str, default="gcc",
+                        help="Environment (i.e. gcc, gcc.4.9.3, cray, etc...)")
+    args = parser.parse_args()
+
+    if args.list:
+        print("Supported Systems:")
+        for x in get_supported_systems():
+            print("- {}".format(x))
+        print("Matched with: {}".format(system))
+        exit(0)
+
+    print(find_environment(system, args.environment))
