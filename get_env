@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+DEFAULT_SYSTEM_NAME = "default"
 
 
 def get_current_dir() -> str:
@@ -12,7 +13,7 @@ def get_supported_systems() -> [str]:
     """
     import os
     import re
-    pattern = re.compile(r'\Aenv\.(?P<name>[\w\-._]+)\.((cray|gcc|pgi|clang)\.((\w-_)+\.)*)\w+$')
+    pattern = re.compile(r'\Aenv\.(?P<name>[\w\-._]+)\.((cray|gnu|gcc|pgi|clang)\.((\w-_)+\.)*)\w+$')
     ls = os.listdir(get_current_dir())
     filtered = set()
     for f in ls:
@@ -36,54 +37,51 @@ def match_system(hostname: str) -> str:
         if hostname.startswith(s):
             if len(s) > len(bestfit):
                 bestfit = s
+    if bestfit == '':
+        return DEFAULT_SYSTEM_NAME
     return bestfit
 
 
-def find_environment(system: str, environment: str) -> str:
+def find_environment(system_name: str, environment: str) -> str:
     """Find the system with the associated environment. 
     If multiple environments are available, select the one with the least specifiers."""
     import os
     files = os.listdir(get_current_dir())
 
-    prefix = "env.{system}.{environment}".format(system=system, environment=environment)
+    if system_name == DEFAULT_SYSTEM_NAME:
+        environment = ''
+
+    prefix = "env.{system}".format(system=system_name)
+    if environment != '':
+        prefix = "{prefix}.{environment}".format(prefix=prefix, environment=environment)
+
     filtered = [x for x in files if x.startswith(prefix)]
     if len(filtered) == 0:
-        raise ValueError('Environment with the prefix {} not found!'.format(prefix))
+        raise ValueError("Environment with the prefix {} not found!".format(prefix))
+
     filtered.sort(key=len)
     return "{cd}/{file}".format(cd=get_current_dir(), file=filtered[0])
-
-
-def get_default_environment() -> str:
-    """Get the default environment."""
-    import os
-    default = "{cd}/{file}".format(cd=get_current_dir(), file="env.default.sh")
-    if not os.path.exists(default):
-        raise RuntimeError("The default environment {} does not exist.".format(default))
-    return default
 
 
 if __name__ == "__main__":
     import platform
     import argparse
-    system = match_system(platform.node())
+    hostname = platform.node()
+    system = match_system(hostname)
 
     parser = argparse.ArgumentParser(description="Get system environment")
     parser.add_argument("-l", "--list", action="store_true",
                         help="List supported systems.")
-    parser.add_argument("-e", "--environment", type=str, default="gcc",
-                        help="Environment (i.e. gcc, gcc.4.9.3, cray, etc...)")
+    parser.add_argument("-e", "--environment", type=str, default="gnu",
+                        help="Environment (i.e. gnu, gnu.4.9.3, cray, etc...)")
     args = parser.parse_args()
 
     if args.list:
+        print("Hostname: {}".format(hostname))
         print("Supported Systems:")
         for x in get_supported_systems():
             print("- {}".format(x))
         print("Matched with: {}".format(system))
-        exit(0)
-
-    # Unknown system, return default, empty environment
-    if system == '':
-        print(get_default_environment())
         exit(0)
 
     print(find_environment(system, args.environment))
