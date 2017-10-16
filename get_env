@@ -53,6 +53,15 @@ def find_environment(system: str, environment: str) -> str:
     return "{cd}/{file}".format(cd=get_current_dir(), file=filtered[0])
 
 
+def get_default_environment() -> str:
+    """Get the default environment."""
+    import os
+    default = "{cd}/{file}".format(cd=get_current_dir(), file="env.default.sh")
+    if not os.path.exists(default):
+        raise RuntimeError("The default environment {} does not exist.".format(default))
+    return default
+
+
 if __name__ == "__main__":
     import platform
     import argparse
@@ -70,6 +79,11 @@ if __name__ == "__main__":
         for x in get_supported_systems():
             print("- {}".format(x))
         print("Matched with: {}".format(system))
+        exit(0)
+
+    # Unknown system, return default, empty environment
+    if system == '':
+        print(get_default_environment())
         exit(0)
 
     print(find_environment(system, args.environment))
