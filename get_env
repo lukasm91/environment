@@ -40,6 +40,8 @@ def match_system(hostname: str) -> str:
 
 
 def find_environment(system: str, environment: str) -> str:
+    """Find the system with the associated environment. 
+    If multiple environments are available, select the one with the least specifiers."""
     import os
     files = os.listdir(get_current_dir())
 
@@ -47,9 +49,8 @@ def find_environment(system: str, environment: str) -> str:
     filtered = [x for x in files if x.startswith(prefix)]
     if len(filtered) == 0:
         raise ValueError('Environment with the prefix {} not found!'.format(prefix))
-    sorted(filtered)
-    file = "{cd}/{file}".format(cd=get_current_dir(), file=filtered[0])
-    return file
+    filtered.sort(key=len)
+    return "{cd}/{file}".format(cd=get_current_dir(), file=filtered[0])
 
 
 if __name__ == "__main__":
