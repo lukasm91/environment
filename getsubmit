@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+DEFAULT_SYSTEM_NAME = "default"
+
+
+def get_current_dir() -> str:
+    import os
+    return os.path.dirname(os.path.realpath(__file__))
+
+
+def get_supported_systems() -> [str]:
+    """Return a list of systems where support is availabl
+    Scan the available env. files and filter the names with the pattern submit.SYSTEMNAME.(target).postfix
+    """
+    import os
+    import re
+    pattern = re.compile(r'\Asubmit\.(?P<name>[\w\-._]+)\.(cpu|gpu|phi)\.\w+$')
+    ls = os.listdir(get_current_dir())
+    filtered = set()
+    for f in ls:
+        m = pattern.match(f)
+        if m:
+            filtered.add(m.group('name'))
+    return list(filtered)
+
+
+def match_system(hostname: str) -> str:
+    """"Match a hostname with the supported system.
+    Fit the longest prefix with the supported system.
+
+    A host with the name keschln-0001 should fit to keschln-0001 if available, otherwise it should fit to kesch.
+    """
+    import platform
+    hostname = platform.node()
+    systems = get_supported_systems()
+    bestfit = ''
+    for s in systems:
+        if hostname.startswith(s):
+            if len(s) > len(bestfit):
+                bestfit = s
+    if bestfit == '':
+        return DEFAULT_SYSTEM_NAME
+    return bestfit
+
+
+def find_submit_script(system_name: str, target: str) -> str:
+    """Find the submit script with the associated target. 
+    If multiple environments are available, select the one with the least specifiers."""
+    import os
+    files = os.listdir(get_current_dir())
+
+    if system_name == DEFAULT_SYSTEM_NAME:
+        target = ''
+
+    prefix = "submit.{system}".format(system=system_name)
+    if target != '':
+        prefix = "{prefix}.{target}".format(prefix=prefix, target=target)
+
+    filtered = [x for x in files if x.startswith(prefix)]
+    if len(filtered) == 0:
+        raise ValueError("Submit Script with the prefix {} not found!".format(prefix))
+
+    filtered.sort(key=len)
+    return "{cd}/{file}".format(cd=get_current_dir(), file=filtered[0])
+
+
+if __name__ == "__main__":
+    import platform
+    import argparse
+    hostname = platform.node()
+    system = match_system(hostname)
+
+    parser = argparse.ArgumentParser(description="Get submit scripts")
+    parser.add_argument("-l", "--list", action="store_true",
+                        help="List supported systems.")
+    parser.add_argument("-t", "--target", type=str, default="cpu",
+                        help="Compute Target (cpu, gpu, phi)")
+    args = parser.parse_args()
+
+    if args.list:
+        print("Hostname: {}".format(hostname))
+        print("Supported Systems:")
+        for x in get_supported_systems():
+            print("- {}".format(x))
+        print("Matched with: {}".format(system))
+        exit(0)
+
+    print(find_submit_script(system, args.target))
