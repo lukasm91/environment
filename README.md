@@ -6,7 +6,7 @@ the format "env.(hostname).(environment).sh"
 
 ## Usage
 
-The script `get_env` will return an environment fitting to the system. By 
+The script `getenv` will return an environment fitting to the system. By 
 default the system selects the `gnu` environment. If no environment file
 matches the `hostname` then the default environment is returned 
 (`env.default.sh`). 
@@ -27,14 +27,14 @@ Let's assume the following files are available in the environment folder:
 - env.kesch.cray.sh
 - env.kesch.gnu.4.9.3.sh
 
-And let's assume you are on host `daint` and execute the `get_env` script:
+And let's assume you are on host `daint` and execute the `getenv` script:
 
-- Requesting `./get_env` will return `env.daint.gnu.sh`
-- Requesting `./get_env -e pgi` will return `env.daint.pgi.sh`
+- Requesting `./getenv` will return `env.daint.gnu.sh`
+- Requesting `./getenv -e pgi` will return `env.daint.pgi.sh`
 
 If you are on `kesch`:
 
-- Requesting `./get_env` will return `env.kesch.gnu.sh`
-- Requesting `./get_env -e gnu.4.9.3` will return `env.kesch.gnu.4.9.3.sh`
+- Requesting `./getenv` will return `env.kesch.gnu.sh`
+- Requesting `./getenv -e gnu.4.9.3` will return `env.kesch.gnu.4.9.3.sh`
 
 
