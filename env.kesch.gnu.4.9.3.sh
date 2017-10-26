@@ -12,7 +12,7 @@ module load HDF5
 
 
 export LD_LIBRARY_PATH=${CRAY_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}
-export BOOST_ROOT=/project/c14/install/kesch/boost_1.65.1/
+export BOOST_ROOT=/project/c14/install/kesch/boost/boost_1_65_1/
 export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
 
 export CC=`which gcc`
