@@ -10,7 +10,7 @@ module load craype-accel-nvidia60
 module load CMake
 
 # Boost
-export BOOST_ROOT=/project/c14/install/daint/boost/boost_1_64_0/
+export BOOST_ROOT=/scratch/snx3000/jenkins/install/boost/boost_1_64_0
 export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
 
 # Override C++ and C compiler
