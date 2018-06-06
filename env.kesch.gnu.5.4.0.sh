@@ -28,3 +28,4 @@ export CXX=`which g++`
 export CC=`which gcc`
 export FC=`which gfortran`
 export LINKER_X86_64=$(which ld)
+export HOST_COMPILER=`which g++`

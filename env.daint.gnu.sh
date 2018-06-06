@@ -17,3 +17,5 @@ export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
 export CXX=`which g++`
 export CC=`which gcc`
 export FC=ftn
+export USE_MPI_COMPILER=OFF
+export HOST_COMPILER=`which CC`
