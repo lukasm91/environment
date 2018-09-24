@@ -2,7 +2,7 @@
 module purge
 module load craype-network-infiniband
 module load craype-haswell
-module load PrgEnv-gnu/17.02
+module load PrgEnv-cray
 module load craype-accel-nvidia35
 module load cray-libsci
 module load cudatoolkit/8.0.61
@@ -26,5 +26,9 @@ export LDFLAGS="-L$EBROOTGCC/lib64 ${LDFLAGS}"
 # We have gcc for gnu, cray and pgi environments
 export CXX=`which g++`
 export CC=`which gcc`
-export FC=`which gfortran`
+if [ "${target}" = "gpu" ]; then
+    export FC="/opt/cray/craype/2.5.11/bin/ftn"
+else
+    export FC="`which gfortran`"
+fi
 export LINKER_X86_64=$(which ld)
