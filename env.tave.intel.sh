@@ -11,6 +11,8 @@ module load cray-mpich
 
 module load CMake
 
+module switch craype-mic-knl craype-sandybridge
+
 # Boost
 export BOOST_ROOT=/scratch/snx2000/jenkins/install/boost/boost_1_64_0
 export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
