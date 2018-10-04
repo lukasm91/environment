@@ -9,7 +9,7 @@ else
     module swap ${prgenv} PrgEnv-pgi
 fi
 
-module load CMake
+module load CMake/3.11.4
 module load craype-accel-nvidia60
 
 module unload pgi
