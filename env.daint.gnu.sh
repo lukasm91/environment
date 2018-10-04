@@ -10,7 +10,7 @@ else
 fi
 
 module load craype-accel-nvidia60
-module load CMake
+module load CMake/3.11.4
 
 # Boost
 export BOOST_ROOT=$SCRATCH/../jenkins/install/boost/boost_1_64_0
