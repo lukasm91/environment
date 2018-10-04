@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+module load daint-gpu
+
 prgenv=`module list -t 2>&1 | grep 'PrgEnv-'`
 if [ -z "${prgenv}" ]; then
     module load PrgEnv-pgi
