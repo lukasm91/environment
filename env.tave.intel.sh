@@ -14,7 +14,7 @@ module load /users/jenkins/easybuild/tave/modules/all/CMake/3.12.0
 module switch craype-mic-knl craype-sandybridge
 
 # Boost
-export BOOST_ROOT=/scratch/snx2000/jenkins/install/boost/boost_1_64_0
+export BOOST_ROOT=/scratch/snx2000/jenkins/install/boost/boost_1_67_0
 export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
 
 export FC=`which gfortran`
