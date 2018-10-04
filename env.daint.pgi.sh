@@ -9,7 +9,7 @@ else
     module swap ${prgenv} PrgEnv-pgi
 fi
 
-module load CMake/3.11.4
+module load /users/jenkins/easybuild/daint/haswell/modules/all/CMake/3.12.0
 module load craype-accel-nvidia60
 
 module unload pgi
