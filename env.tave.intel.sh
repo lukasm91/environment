@@ -9,7 +9,7 @@ module swap intel intel/18.0.2.199
 module load gcc # for recent STL
 module load cray-mpich
 
-module load CMake
+module load /users/jenkins/easybuild/tave/modules/all/CMake/3.12.0
 
 module switch craype-mic-knl craype-sandybridge
 
