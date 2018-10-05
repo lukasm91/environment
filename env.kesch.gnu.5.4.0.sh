@@ -26,5 +26,5 @@ export LDFLAGS="-L$EBROOTGCC/lib64 ${LDFLAGS}"
 # We have gcc for gnu, cray and pgi environments
 export CXX=`which g++`
 export CC=`which gcc`
-export FC=`which gfortran`
+export FC=`which mpif90`
 export LINKER_X86_64=$(which ld)
