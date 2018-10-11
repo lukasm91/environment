@@ -17,4 +17,7 @@ module switch craype-mic-knl craype-sandybridge
 export BOOST_ROOT=/scratch/snx2000/jenkins/install/boost/boost_1_67_0
 export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
 
-export FC=`which gfortran`
+export FC=ftn
+export CC=cc
+export CXX=CC
+
