@@ -26,9 +26,5 @@ export LDFLAGS="-L$EBROOTGCC/lib64 ${LDFLAGS}"
 # We have gcc for gnu, cray and pgi environments
 export CXX=`which g++`
 export CC=`which gcc`
-if [ "${target}" = "gpu" ]; then
-    export FC="/opt/cray/craype/2.5.11/bin/ftn"
-else
-    export FC="`which gfortran`"
-fi
+export FC="`which gfortran`"
 export LINKER_X86_64=$(which ld)
