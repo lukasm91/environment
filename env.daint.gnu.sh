@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+module load daint-gpu
+
 prgenv=`module list -t 2>&1 | grep 'PrgEnv-'`
 if [ -z "${prgenv}" ]; then
     module load PrgEnv-gnu
@@ -7,7 +10,7 @@ else
 fi
 
 module load craype-accel-nvidia60
-module load CMake
+module load /users/jenkins/easybuild/daint/haswell/modules/all/CMake/3.12.0
 
 # Boost
 export BOOST_ROOT=$SCRATCH/../jenkins/install/boost/boost_1_64_0
