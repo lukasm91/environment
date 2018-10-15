@@ -16,6 +16,8 @@ module load /users/jenkins/easybuild/daint/haswell/modules/all/CMake/3.12.0
 export BOOST_ROOT=$SCRATCH/../jenkins/install/boost/boost_1_64_0
 export LD_LIBRARY_PATH=${BOOST_ROOT}/lib:${LD_LIBRARY_PATH}
 
+export CXX=CC
+export CC=cc
 export FC=ftn
 # We cannot simply use g++ as cuda host compiler, because we require MPI support
 export CUDAHOSTCXX=CC
